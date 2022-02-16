@@ -10,6 +10,7 @@ session_start();
 //require autoload file
 require_once ('vendor/autoload.php');
 require_once ('model/data-layer.php');
+require('model/validation-functions.php');
 
 //create an instance of the Base class
 $f3 = Base::instance();
@@ -28,29 +29,53 @@ $f3->route("GET|POST /survey", function($f3){
 
     //Get the condiments from the model and add to F3 hive
     $f3->set('options', getOptions());
-    $_SESSION['name'] = $_POST['name'];
-    $_SESSION['options'] = $_POST['options'];
+    $name = "";
 
     //If the form has been posted
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        //Add the data to the session variable
-        //If condiments were selected
-        if (isset($_POST['options'])) {
+        $name = $_POST['name'];
+        $options = $_POST['options'];
 
-            $_SESSION['options']  = implode(", ",$_POST['options']);
+        //Validate the data
+        if(validName($name)) {
 
+            //Add the data to the session variable
+            $_SESSION['name'] = $_POST['name'];
         }
         else {
 
-            $_SESSION['options'] = "None selected";
+            //Set an error
+            $f3->set("errors['name']", 'Please enter a name.');
+        }
+        //If options were selected
+        if (isset($_POST['options'])) {
+
+            $_SESSION['options'] = $_POST['options'];
+
+            //If options are valid
+            if (validOptions($options)) {
+                $options = implode(", ", $_POST['options']);
+            }
+            else {
+                $f3->set("errors['options']", "Invalid selection of options");
+            }
+        }
+        else {
+
+
+            $f3->set("errors['options']", "Please select an option.");
         }
 
         //Redirect user to summary page
+        if (empty($f3->get('errors'))) {
+            $_SESSION['options'] = $options;
+            $_SESSION['name'] = $name;
             $f3->reroute('summary');
+        }
 
     }
-
+    $f3->set('name', $name);
     $view = new Template();
     echo $view->render('views/survey.html');
 

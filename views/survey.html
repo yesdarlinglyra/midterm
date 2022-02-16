@@ -8,10 +8,14 @@
         <label for="name" class="col-sm-4 control-label">Name</label>
         <div class="col-sm-4"><input class="form-control" type="text"
                                      name="name" id="name" value="{{ @name }}"></div>
-
+        <!-- Display an error if there is one -->
+        <check if="{{ isset(@errors['name']) }}">
+            <span class="err">{{ @errors['name'] }}</span>
+        </check>
     </div>
+
     <br>
-    <!-- get condiments -->
+    <!-- get options -->
     <div class="form-group">
         <label class="col-sm-2 control-label">Check all that apply:</label>
         <div class="col-sm-4">
@@ -19,6 +23,11 @@
                 <label><input type="checkbox" name="options[]" value="{{ @options }}"> {{ ucfirst(@options) }}</label><br>
             </repeat>
         </div>
+
+        <!-- Display an error if there is one -->
+        <check if="{{ isset(@errors['options']) }}">
+            <span class="err">{{ @errors['options'] }}</span>
+        </check>
 
     </div>
     <div class="col-sm-4">
