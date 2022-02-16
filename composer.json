@@ -1,0 +1,14 @@
+{
+  "name": "ldarling/328/midterm",
+  "description": "Quiz # 2 Midterm for SDEV328",
+  "license": "open source",
+  "authors": [
+    {
+      "name": "Lyra Darling",
+      "email": "darlling.lyra@student.greenriver.edu"
+    }
+  ],
+  "require": {
+    "bcosca/fatfree-core": "dev-master"
+  }
+}
